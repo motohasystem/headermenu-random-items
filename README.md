@@ -1,0 +1,2 @@
+# headermenu-random-items
+kintone用のJSカスタマイズ、適用するとHeaderMenuSpaceにランダムで100個のアイコンを配置します
