@@ -4,7 +4,7 @@ MenuItem100
 ![typescript](https://img.shields.io/badge/-TypeScript-007ACC.svg?logo=typescript&style=flat-square)
 ![FontAwesome](https://img.shields.io/badge/-FontAwesome-563D7C.svg?logo=bootstrap&style=flat-square)
 ![github license](https://img.shields.io/badge/license-MIT-green.svg?style=flat-square)
-[![download](https://img.shields.io/badge/download-zip-brightgreen.svg?style=flat-square)](https://github.com/motohasystem/preview-and-import-plugin/tree/main/dist)
+[![download](https://img.shields.io/badge/download-js-brightgreen.svg?style=flat-square)](https://raw.githubusercontent.com/motohasystem/headermenu100/main/dist/js/customize.js)
 
 ## 機能
 
@@ -20,7 +20,7 @@ kintone用のJSカスタマイズとして適用すると、HeaderMenuSpaceに�
 
 ## インストール
 
-お使いのkintoneアプリにJavaScriptカスタマイズとして設定します。
+<a href="https://raw.githubusercontent.com/motohasystem/headermenu100/main/dist/js/customize.js">JSファイル</a>をダウンロードして、お使いのkintoneアプリにJavaScriptカスタマイズとして設定します。
 
 ![kintoneアプリ設定画面](img/js-cutomize-menu.png)
 
