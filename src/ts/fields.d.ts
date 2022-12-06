@@ -1,11 +1,14 @@
 declare namespace kintone.types {
   interface Fields {
-    メールアドレス: kintone.fieldTypes.SingleLineText;
     備考: kintone.fieldTypes.MultiLineText;
+    メールアドレス: kintone.fieldTypes.SingleLineText;
+    顧客ランク: kintone.fieldTypes.DropDown;
     住所: kintone.fieldTypes.SingleLineText;
     郵便番号: kintone.fieldTypes.SingleLineText;
     TEL: kintone.fieldTypes.SingleLineText;
     FAX: kintone.fieldTypes.SingleLineText;
+
+    会社ロゴ: kintone.fieldTypes.File;
   }
   interface SavedFields extends Fields {
     $id: kintone.fieldTypes.Id;

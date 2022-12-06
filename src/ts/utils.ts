@@ -76,18 +76,47 @@ export class Utils {
         tagName: string,
         className: string = "",
         childElements: HTMLElement[] = [],
-        textContent: string = ""
+        textContent: string = "",
+        attrs: { [key: string]: string } | undefined = undefined
     ): HTMLElement => {
         const el = document.createElement(tagName)
         el.className = className
         el.textContent = textContent
 
-        if(childElements.length > 0){
-            childElements.forEach((child)=>{
+        if (childElements.length > 0) {
+            childElements.forEach((child) => {
                 el.appendChild(child)
             })
         }
+
+        // 属性値をセット
+        if (attrs) {
+            Object.entries(attrs).forEach(([key, value]) => {
+                el.setAttribute(key, value)
+            })
+        }
         return el
+    }
+
+    // shotcut for createElement
+    static ce = (
+        t: string,
+        c: string = "",
+        ce: HTMLElement[] = [],
+        tc: string = "",
+        at: { [key: string]: string } | undefined = undefined
+    ): HTMLElement => {
+        return this.createElement(t, c, ce, tc, at)
+    }
+
+
+    /**
+     * テキストだけを持ったDIV要素を構築して返す
+     * @param msg innerText
+     * @returns 
+     */
+    static simpleDiv = (msg: string): HTMLDivElement =>{
+        return Utils.createElement('div', '',[], msg) as HTMLDivElement
     }
 
     // 配列のうち、重複したものがあればTrueを返す
@@ -115,49 +144,48 @@ export class Utils {
         return `${location.protocol}//${location.host}/k/${appid}`
     }
 
-    // CSSセレクタに使用できない文字を_に置き換える
-    static replace_to_selector_string(raw: string, replace: string='_'): string{
-        const re = /[!-/:-@¥[-`{-~]/g    // 半角記号
-        const replaced = raw.replace(re, replace)
-        return replaced
+
+    // kintone clientのエラーを受け取ってメッセージを抽出し、文字列配列の形で返す
+    static retrieve_errors(error: any, max_msgs: number = -1): string[] | undefined{
+        const errors = error?.error?.errors
+        if(errors == undefined){
+            return undefined
+        }
+
+        // メッセージの構築
+        let whole_errors: string[] = []
+        Object.keys(errors).forEach((field)=>{
+            const msgs = errors[field].messages
+            const comments = msgs.map((msg: string)=>{
+                return `[${field}] ${msg}`
+            })
+            whole_errors = whole_errors.concat(comments)
+        })
+
+        // ソート
+        whole_errors.sort()
+
+        // エラーレコードの件数が多い場合に省略
+        if(max_msgs >= 0 && max_msgs < whole_errors.length){
+            const remain_msgs = whole_errors.length - max_msgs
+            whole_errors = whole_errors.splice(0, max_msgs)
+            whole_errors.push(`以下${remain_msgs}件のエラーメッセージを省略しました。`)
+        }
+
+        return whole_errors
     }
 
-    // 指定したIDのレコードを開くリンクを持ったノードを構築して返す
-    static get_record_anchor(record_id: string) {
-        // const record_id = kintone.app.record.getId()
-        const app_id = kintone.app.getId()
-        const url = `/k/${app_id}/show#record=${record_id}`
-        const fileicon = Utils.createElement('span', 'recordlist-detail-gaia mt-1')
-        const anchor = Utils.createElement('a', 'text-decoration-none', [fileicon]) // , '📋')
-        anchor.setAttribute('href', url)
-        anchor.setAttribute('target', "_blank")
-        const link: HTMLElement = Utils.createElement('td', '', [anchor])
 
-        return link
-    }
-
-}
-
-export class CustomError extends Error {
-    constructor(e?: string){
-        super(e)
-        this.name = new.target.name;
-    }
-}
-
-export type KintoneErrorStatus = {
-    code: string
-    , id: string
-    , message: string
-
-}
-
-export class KintoneAuthorityError extends CustomError {
-    appendix: string = ""
-    constructor(public status: KintoneErrorStatus, e?: string, appendix?: string){
-        super(e)
-        if(appendix){
-            this.appendix = appendix
+    /**
+     * kintone.app.getHeaderMenuSpaceElement() で取得できる要素に height: auto; を付与する
+     */
+     static auto_height_header_menu_space() {
+        const hmse = kintone.app.getHeaderMenuSpaceElement()
+        if (hmse) {
+            hmse.style.height = "auto"
+        }
+        else {
+            throw new Error('HeaderMenuSpaceElementが取得できません。')
         }
     }
 }
